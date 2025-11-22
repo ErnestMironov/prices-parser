@@ -2,5 +2,7 @@
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/DataInitializer.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/ThreadTestService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/task/ProductParseTask.java
+/Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/parser/ProductParser.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/repository/ProductRepository.java
+/Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/parser/UniversalProductParser.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/PricesParserApplication.java
