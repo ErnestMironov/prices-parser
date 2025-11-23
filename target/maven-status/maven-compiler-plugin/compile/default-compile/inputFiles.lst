@@ -1,3 +1,4 @@
+/Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/ScheduledTaskService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/ProductParseService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/ExecutorServiceDemoService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/config/ThreadPoolConfig.java
@@ -12,7 +13,9 @@
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/parser/ProductParser.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/WebClientService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/BlockingStructuresDemoService.java
+/Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/config/SchedulerConfig.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/repository/ProductRepository.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/config/WebClientConfig.java
+/Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/ScheduledParseService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/parser/UniversalProductParser.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/DaemonThreadDemoService.java
