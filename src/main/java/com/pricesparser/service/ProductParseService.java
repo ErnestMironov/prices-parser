@@ -22,14 +22,16 @@ public class ProductParseService {
   private final WebClientService webClientService;
   private final UniversalProductParser parser;
   private final ProductRepository productRepository;
+  private final AsyncLoggingService asyncLoggingService;
 
   public ProductParseService(ExecutorService productParseExecutor,
       WebClientService webClientService, UniversalProductParser parser,
-      ProductRepository productRepository) {
+      ProductRepository productRepository, AsyncLoggingService asyncLoggingService) {
     this.executorService = productParseExecutor;
     this.webClientService = webClientService;
     this.parser = parser;
     this.productRepository = productRepository;
+    this.asyncLoggingService = asyncLoggingService;
   }
 
   public Future<Product> parseProductAsync(String url) {
@@ -54,15 +56,18 @@ public class ProductParseService {
         product.setCreatedAt(existing.getCreatedAt());
         product = productRepository.save(product);
         logger.info("[{}] Товар обновлён: {}", threadName, product.getTitle());
+        asyncLoggingService.logProductAsync(url, product.getTitle(), product.getPrice());
       } else {
         product = productRepository.save(product);
         logger.info("[{}] Товар сохранён: {}", threadName, product.getTitle());
+        asyncLoggingService.logProductAsync(url, product.getTitle(), product.getPrice());
       }
 
       return product;
 
     } catch (Exception e) {
       logger.error("[{}] Ошибка при парсинге URL {}: {}", threadName, url, e.getMessage(), e);
+      asyncLoggingService.logErrorAsync(url, e.getMessage());
       throw new RuntimeException("Не удалось распарсить товар по URL: " + url, e);
     }
   }

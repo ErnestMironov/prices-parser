@@ -26,6 +26,7 @@ class ProductParseServiceTest {
   private WebClientService webClientService;
   private UniversalProductParser parser;
   private ProductRepository productRepository;
+  private AsyncLoggingService asyncLoggingService;
   private ProductParseService productParseService;
 
   @BeforeEach
@@ -34,9 +35,10 @@ class ProductParseServiceTest {
     webClientService = mock(WebClientService.class);
     parser = mock(UniversalProductParser.class);
     productRepository = mock(ProductRepository.class);
+    asyncLoggingService = mock(AsyncLoggingService.class);
 
-    productParseService =
-        new ProductParseService(executorService, webClientService, parser, productRepository);
+    productParseService = new ProductParseService(executorService, webClientService, parser,
+        productRepository, asyncLoggingService);
   }
 
   @AfterEach
@@ -55,7 +57,7 @@ class ProductParseServiceTest {
 
     when(webClientService.fetchHtmlBlocking(url)).thenReturn(html);
     when(parser.parseFromHtml(url, html)).thenReturn(expectedProduct);
-    when(productRepository.existsByUrl(url)).thenReturn(false);
+    when(productRepository.findByUrl(url)).thenReturn(java.util.Optional.empty());
     when(productRepository.save(any(Product.class))).thenReturn(expectedProduct);
 
     Future<Product> future = productParseService.parseProductAsync(url);
@@ -78,7 +80,7 @@ class ProductParseServiceTest {
       Product product = new Product(url, "Product", new BigDecimal("99.99"), "Description");
       when(webClientService.fetchHtmlBlocking(url)).thenReturn(html);
       when(parser.parseFromHtml(url, html)).thenReturn(product);
-      when(productRepository.existsByUrl(url)).thenReturn(false);
+      when(productRepository.findByUrl(url)).thenReturn(java.util.Optional.empty());
       when(productRepository.save(any(Product.class))).thenReturn(product);
     }
 
