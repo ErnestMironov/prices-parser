@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.pricesparser.repository.ProductRepositoryTest" time="2.122" tests="11" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.pricesparser.config.ThreadPoolConfigTest" time="9.039" tests="2" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -48,6 +48,7 @@
     <property name="localRepository" value="/Users/ernest/.m2/repository"/>
     <property name="java.vendor.url.bug" value="http://www.azul.com/support/"/>
     <property name="java.io.tmpdir" value="/var/folders/bc/x8ylvmts7838q3dqnv16wxz00000gn/T/"/>
+    <property name="com.zaxxer.hikari.pool_number" value="1"/>
     <property name="java.version" value="21.0.2"/>
     <property name="user.dir" value="/Users/ernest/Desktop/prices-parser"/>
     <property name="os.arch" value="aarch64"/>
@@ -65,9 +66,9 @@
     <property name="java.class.version" value="65.0"/>
     <property name="CONSOLE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} - %msg%n"/>
   </properties>
-  <testcase name="shouldReturnEmptyWhenProductNotFoundByUrl" classname="com.pricesparser.repository.ProductRepositoryTest" time="0.387">
-    <system-out><![CDATA[17:14:12.385 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.pricesparser.repository.ProductRepositoryTest]: ProductRepositoryTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-17:14:12.440 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.pricesparser.PricesParserApplication for test class com.pricesparser.repository.ProductRepositoryTest
+  <testcase name="shouldCreateExecutorService" classname="com.pricesparser.config.ThreadPoolConfigTest" time="0.011">
+    <system-out><![CDATA[2025-11-23 17:14:14 - Could not detect default configuration classes for test class [com.pricesparser.config.ThreadPoolConfigTest]: ThreadPoolConfigTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-11-23 17:14:14 - Found @SpringBootConfiguration com.pricesparser.PricesParserApplication for test class com.pricesparser.config.ThreadPoolConfigTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -77,19 +78,20 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.2.0)
 
-2025-11-23 17:14:12 - Starting ProductRepositoryTest using Java 21.0.2 with PID 52843 (started by ernest in /Users/ernest/Desktop/prices-parser)
-2025-11-23 17:14:12 - Running with Spring Boot v3.2.0, Spring v6.1.1
-2025-11-23 17:14:12 - No active profile set, falling back to 1 default profile: "default"
-2025-11-23 17:14:12 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-11-23 17:14:12 - Finished Spring Data repository scanning in 63 ms. Found 1 JPA repository interface.
-2025-11-23 17:14:12 - Replacing 'dataSource' DataSource bean with embedded version
-2025-11-23 17:14:13 - Starting embedded database: url='jdbc:h2:mem:3c14c71d-ae27-4a5f-9d40-3103f9360fe1;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
-2025-11-23 17:14:13 - HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-11-23 17:14:13 - HHH000412: Hibernate ORM core version 6.3.1.Final
-2025-11-23 17:14:13 - HHH000026: Second-level cache disabled
-2025-11-23 17:14:13 - No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-11-23 17:14:13 - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-11-23 17:14:13 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-11-23 17:14:14 - Starting ThreadPoolConfigTest using Java 21.0.2 with PID 52843 (started by ernest in /Users/ernest/Desktop/prices-parser)
+2025-11-23 17:14:14 - Running with Spring Boot v3.2.0, Spring v6.1.1
+2025-11-23 17:14:14 - The following 1 profile is active: "test"
+2025-11-23 17:14:14 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-23 17:14:14 - Finished Spring Data repository scanning in 3 ms. Found 1 JPA repository interface.
+2025-11-23 17:14:14 - BeanFactory id=ab01d237-213c-340a-a05e-b602c7682451
+2025-11-23 17:14:14 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-11-23 17:14:14 - HHH000026: Second-level cache disabled
+2025-11-23 17:14:14 - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-23 17:14:14 - HikariPool-1 - Starting...
+2025-11-23 17:14:14 - HikariPool-1 - Added connection conn15: url=jdbc:h2:mem:pricesdb user=SA
+2025-11-23 17:14:14 - HikariPool-1 - Start completed.
+2025-11-23 17:14:14 - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-23 17:14:14 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
 Hibernate: 
     drop table if exists products cascade 
 Hibernate: 
@@ -103,8 +105,146 @@ Hibernate:
         url varchar(2048) not null unique,
         primary key (id)
     )
-2025-11-23 17:14:13 - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-11-23 17:14:13 - Started ProductRepositoryTest in 1.384 seconds (process running for 1.918)
+2025-11-23 17:14:14 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-23 17:14:14 - Асинхронный сервис логирования инициализирован (демон-поток)
+2025-11-23 17:14:14 - Демон-поток логирования запущен
+2025-11-23 17:14:14 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-23 17:14:14 - Инициализация периодических задач парсинга
+2025-11-23 17:14:14 - Периодическая задача парсинга запланирована: каждые 30 секунд, первая через 5 секунд
+2025-11-23 17:14:15 - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:pricesdb'
+2025-11-23 17:14:15 - Started ThreadPoolConfigTest in 0.647 seconds (process running for 3.172)
+2025-11-23 17:14:15 - === Этап 12: Межсервисное взаимодействие ===
+2025-11-23 17:14:15 - --- Демонстрация RestTemplate (синхронный, блокирующий) ---
+2025-11-23 17:14:15 - Загрузка HTML через RestTemplate с URL: https://example.com
+2025-11-23 17:14:15 - Успешно загружен HTML через RestTemplate с URL: https://example.com (размер: 513 байт)
+2025-11-23 17:14:15 - ✅ RestTemplate: загружено 513 байт за 869 мс
+2025-11-23 17:14:15 - Загрузка HTML через RestTemplate с URL: https://example.org
+2025-11-23 17:14:16 - Успешно загружен HTML через RestTemplate с URL: https://example.org (размер: 513 байт)
+2025-11-23 17:14:16 - ✅ RestTemplate: загружено 513 байт за 417 мс
+2025-11-23 17:14:16 - --- Демонстрация WebClient (асинхронный, неблокирующий) ---
+2025-11-23 17:14:16 - Загрузка HTML с URL: https://example.com
+2025-11-23 17:14:16 - Unable to load io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'. Use DEBUG level to see the full stack: java.lang.UnsatisfiedLinkError: failed to load the required native library
+2025-11-23 17:14:17 - Успешно загружен HTML с URL: https://example.com (размер: 513 байт)
+2025-11-23 17:14:17 - ✅ WebClient: загружено 513 байт за 818 мс
+2025-11-23 17:14:17 - Загрузка HTML с URL: https://example.org
+2025-11-23 17:14:17 - Успешно загружен HTML с URL: https://example.org (размер: 513 байт)
+2025-11-23 17:14:17 - ✅ WebClient: загружено 513 байт за 719 мс
+2025-11-23 17:14:17 - --- Демонстрация FeignClient (декларативный, простой) ---
+2025-11-23 17:14:17 - Загрузка HTML через FeignClient с URL: https://example.com
+2025-11-23 17:14:18 - Успешно загружен HTML через FeignClient с URL: https://example.com (размер: 513 байт)
+2025-11-23 17:14:18 - ✅ FeignClient: загружено 513 байт за 173 мс
+2025-11-23 17:14:18 - --- Сравнение подходов ---
+2025-11-23 17:14:18 - RestTemplate: синхронный, блокирующий, простой в использовании
+2025-11-23 17:14:18 - WebClient: асинхронный, неблокирующий, реактивный, лучше для высокой нагрузки
+2025-11-23 17:14:18 - FeignClient: декларативный, простой интерфейс, автоматическая генерация клиента
+2025-11-23 17:14:18 - === Конец демонстрации межсервисного взаимодействия ===
+
+2025-11-23 17:14:18 - === Этап 6: Блокирующие структуры и синхронизация ===
+2025-11-23 17:14:18 - 
+--- 1. BlockingQueue для очереди URL ---
+2025-11-23 17:14:18 - Создана UrlQueue с ёмкостью: 10
+2025-11-23 17:14:18 - URL добавлен в очередь: https://example.com/blocking1 (размер очереди: 1)
+2025-11-23 17:14:18 - URL добавлен в очередь: https://example.com/blocking2 (размер очереди: 2)
+2025-11-23 17:14:18 - URL добавлен в очередь: https://example.com/blocking3 (размер очереди: 3)
+2025-11-23 17:14:18 - Добавлено 3 URL в очередь. Текущий размер очереди: 3
+2025-11-23 17:14:18 - 
+--- 2. ReentrantLock для синхронизации ---
+2025-11-23 17:14:18 - Счётчик сброшен: 0 -> 0 (поток: main)
+2025-11-23 17:14:18 - Создан потокобезопасный счётчик (начальное значение: 0)
+2025-11-23 17:14:18 - 
+--- 3. CountDownLatch для координации потоков ---
+2025-11-23 17:14:18 - Создан CountDownLatch на 3 потоков
+2025-11-23 17:14:18 - 
+--- 4. Запуск потоков с использованием всех инструментов ---
+2025-11-23 17:14:18 - Запуск 3 потоков...
+2025-11-23 17:14:18 - Счётчик увеличен: 0 -> 1 (поток: BlockingThread-1)
+2025-11-23 17:14:18 - Ожидание завершения всех потоков (CountDownLatch)...
+2025-11-23 17:14:18 - Счётчик увеличен: 1 -> 2 (поток: BlockingThread-2)
+2025-11-23 17:14:18 - [BlockingThread-1] Счётчик увеличен до 2
+2025-11-23 17:14:18 - Счётчик увеличен: 2 -> 3 (поток: BlockingThread-3)
+2025-11-23 17:14:18 - URL извлечён из очереди: https://example.com/blocking1 (размер очереди: 2)
+2025-11-23 17:14:18 - [BlockingThread-1] Извлечён URL из очереди: https://example.com/blocking1
+2025-11-23 17:14:18 - [BlockingThread-2] Счётчик увеличен до 3
+2025-11-23 17:14:18 - [BlockingThread-3] Счётчик увеличен до 3
+2025-11-23 17:14:18 - URL извлечён из очереди: https://example.com/blocking2 (размер очереди: 1)
+2025-11-23 17:14:18 - URL извлечён из очереди: https://example.com/blocking3 (размер очереди: 0)
+2025-11-23 17:14:18 - [BlockingThread-3] Извлечён URL из очереди: https://example.com/blocking3
+2025-11-23 17:14:18 - [BlockingThread-2] Извлечён URL из очереди: https://example.com/blocking2
+2025-11-23 17:14:18 - Thread [BlockingThread-1] начал парсинг URL: https://example.com/blocking1
+2025-11-23 17:14:18 - Thread [BlockingThread-2] начал парсинг URL: https://example.com/blocking2
+2025-11-23 17:14:18 - Thread [BlockingThread-3] начал парсинг URL: https://example.com/blocking3
+Hibernate: 
+    insert 
+    into
+        products
+        (created_at, description, parsed_at, price, title, url, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        products
+        (created_at, description, parsed_at, price, title, url, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        products
+        (created_at, description, parsed_at, price, title, url, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+2025-11-23 17:14:19 - Thread [BlockingThread-1] успешно сохранил товар: Товар с https://example.com/blocking1
+2025-11-23 17:14:19 - Thread [BlockingThread-2] успешно сохранил товар: Товар с https://example.com/blocking2
+2025-11-23 17:14:19 - Thread [BlockingThread-3] успешно сохранил товар: Товар с https://example.com/blocking3
+2025-11-23 17:14:19 - Счётчик уменьшен: 3 -> 2 (поток: BlockingThread-1)
+2025-11-23 17:14:19 - Счётчик уменьшен: 2 -> 1 (поток: BlockingThread-2)
+2025-11-23 17:14:19 - Счётчик уменьшен: 1 -> 0 (поток: BlockingThread-3)
+2025-11-23 17:14:19 - [BlockingThread-1] Счётчик уменьшен до 0
+2025-11-23 17:14:19 - [BlockingThread-2] Счётчик уменьшен до 0
+2025-11-23 17:14:19 - [BlockingThread-3] Счётчик уменьшен до 0
+2025-11-23 17:14:19 - [BlockingThread-1] Завершил работу. Осталось потоков: 2
+2025-11-23 17:14:19 - [BlockingThread-2] Завершил работу. Осталось потоков: 1
+2025-11-23 17:14:19 - [BlockingThread-3] Завершил работу. Осталось потоков: 0
+2025-11-23 17:14:19 - ✅ Все потоки завершены! Финальное значение счётчика: 0
+2025-11-23 17:14:19 - Итоговый размер очереди: 0 (ожидается 0)
+Hibernate: 
+    select
+        count(*) 
+    from
+        products p1_0
+2025-11-23 17:14:19 - Всего товаров в БД: 3
+2025-11-23 17:14:19 - === Конец демонстрации блокирующих структур ===
+
+2025-11-23 17:14:19 - === Этап 8: Демон-потоки для логирования ===
+2025-11-23 17:14:19 - Демон-поток - это фоновый поток, который:
+2025-11-23 17:14:19 - 1. Работает в фоновом режиме
+2025-11-23 17:14:19 - 2. Не препятствует завершению приложения
+2025-11-23 17:14:19 - 3. Автоматически завершается, когда все обычные потоки завершены
+2025-11-23 17:14:19 - 
+--- Тестирование асинхронного логирования ---
+2025-11-23 17:14:19 - Отправлено сообщение в очередь логирования (размер очереди: 1)
+2025-11-23 17:14:19 - [ASYNC] [2025-11-23 17:14:19] Товар распарсен - URL: https://example.com/product1, Title: Test Product 1, Price: 990.99
+2025-11-23 17:14:19 - Отправлено сообщение в очередь логирования (размер очереди: 1)
+2025-11-23 17:14:19 - [ASYNC] [2025-11-23 17:14:19] Товар распарсен - URL: https://example.com/product2, Title: Test Product 2, Price: 991.99
+2025-11-23 17:14:19 - Отправлено сообщение в очередь логирования (размер очереди: 1)
+2025-11-23 17:14:19 - [ASYNC] [2025-11-23 17:14:19] Товар распарсен - URL: https://example.com/product3, Title: Test Product 3, Price: 992.99
+2025-11-23 17:14:19 - Ожидание обработки всех сообщений демон-потоком...
+2025-11-23 17:14:19 - === Запуск периодического парсинга (ScheduledExecutorService) ===
+2025-11-23 17:14:19 - Запуск параллельного парсинга 2 URL
+2025-11-23 17:14:19 - Запуск параллельного парсинга 2 URL
+2025-11-23 17:14:19 - [ProductParse-1763907259955] Начало парсинга URL: https://example.com
+2025-11-23 17:14:19 - [ProductParse-1763907259956] Начало парсинга URL: https://example.org
+2025-11-23 17:14:19 - Загрузка HTML с URL: https://example.com
+2025-11-23 17:14:19 - Загрузка HTML с URL: https://example.org
+2025-11-23 17:14:20 - Успешно загружен HTML с URL: https://example.com (размер: 513 байт)
+2025-11-23 17:14:20 - [ProductParse-1763907259955] HTML загружен, размер: 513 байт
+2025-11-23 17:14:20 - Успешно загружен HTML с URL: https://example.org (размер: 513 байт)
+2025-11-23 17:14:20 - [ProductParse-1763907259956] HTML загружен, размер: 513 байт
+2025-11-23 17:14:20 - Извлечено - Title: Example Domain, Price: 0, Description: 
+2025-11-23 17:14:20 - Извлечено - Title: Example Domain, Price: 0, Description: 
+2025-11-23 17:14:20 - [ProductParse-1763907259956] Товар распарсен: title=Example Domain, price=0
+2025-11-23 17:14:20 - [ProductParse-1763907259955] Товар распарсен: title=Example Domain, price=0
 Hibernate: 
     select
         p1_0.id,
@@ -118,164 +258,6 @@ Hibernate:
         products p1_0 
     where
         p1_0.url=?
-]]></system-out>
-    <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (/Users/ernest/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.10/byte-buddy-agent-1.14.10.jar)
-WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
-WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
-WARNING: Dynamic loading of agents will be disallowed by default in a future release
-]]></system-err>
-  </testcase>
-  <testcase name="shouldDeleteProduct" classname="com.pricesparser.repository.ProductRepositoryTest" time="0.019">
-    <system-out><![CDATA[Hibernate: 
-    insert 
-    into
-        products
-        (created_at, description, parsed_at, price, title, url, id) 
-    values
-        (?, ?, ?, ?, ?, ?, default)
-]]></system-out>
-  </testcase>
-  <testcase name="shouldSetParsedAtOnCreation" classname="com.pricesparser.repository.ProductRepositoryTest" time="0.003">
-    <system-out><![CDATA[Hibernate: 
-    insert 
-    into
-        products
-        (created_at, description, parsed_at, price, title, url, id) 
-    values
-        (?, ?, ?, ?, ?, ?, default)
-]]></system-out>
-  </testcase>
-  <testcase name="shouldFindProductById" classname="com.pricesparser.repository.ProductRepositoryTest" time="0.005">
-    <system-out><![CDATA[Hibernate: 
-    insert 
-    into
-        products
-        (created_at, description, parsed_at, price, title, url, id) 
-    values
-        (?, ?, ?, ?, ?, ?, default)
-]]></system-out>
-  </testcase>
-  <testcase name="shouldFindAllProducts" classname="com.pricesparser.repository.ProductRepositoryTest" time="0.01">
-    <system-out><![CDATA[Hibernate: 
-    insert 
-    into
-        products
-        (created_at, description, parsed_at, price, title, url, id) 
-    values
-        (?, ?, ?, ?, ?, ?, default)
-Hibernate: 
-    insert 
-    into
-        products
-        (created_at, description, parsed_at, price, title, url, id) 
-    values
-        (?, ?, ?, ?, ?, ?, default)
-Hibernate: 
-    select
-        p1_0.id,
-        p1_0.created_at,
-        p1_0.description,
-        p1_0.parsed_at,
-        p1_0.price,
-        p1_0.title,
-        p1_0.url 
-    from
-        products p1_0
-]]></system-out>
-  </testcase>
-  <testcase name="shouldSaveProductAndAssignId" classname="com.pricesparser.repository.ProductRepositoryTest" time="0.003">
-    <system-out><![CDATA[Hibernate: 
-    insert 
-    into
-        products
-        (created_at, description, parsed_at, price, title, url, id) 
-    values
-        (?, ?, ?, ?, ?, ?, default)
-]]></system-out>
-  </testcase>
-  <testcase name="shouldSetCreatedAtOnCreation" classname="com.pricesparser.repository.ProductRepositoryTest" time="0.002">
-    <system-out><![CDATA[Hibernate: 
-    insert 
-    into
-        products
-        (created_at, description, parsed_at, price, title, url, id) 
-    values
-        (?, ?, ?, ?, ?, ?, default)
-]]></system-out>
-  </testcase>
-  <testcase name="shouldCheckIfProductExistsByUrl" classname="com.pricesparser.repository.ProductRepositoryTest" time="0.005">
-    <system-out><![CDATA[Hibernate: 
-    insert 
-    into
-        products
-        (created_at, description, parsed_at, price, title, url, id) 
-    values
-        (?, ?, ?, ?, ?, ?, default)
-Hibernate: 
-    select
-        p1_0.id 
-    from
-        products p1_0 
-    where
-        p1_0.url=? 
-    fetch
-        first ? rows only
-Hibernate: 
-    select
-        p1_0.id 
-    from
-        products p1_0 
-    where
-        p1_0.url=? 
-    fetch
-        first ? rows only
-]]></system-out>
-  </testcase>
-  <testcase name="shouldCountProducts" classname="com.pricesparser.repository.ProductRepositoryTest" time="0.107">
-    <system-out><![CDATA[Hibernate: 
-    select
-        count(*) 
-    from
-        products p1_0
-Hibernate: 
-    insert 
-    into
-        products
-        (created_at, description, parsed_at, price, title, url, id) 
-    values
-        (?, ?, ?, ?, ?, ?, default)
-Hibernate: 
-    insert 
-    into
-        products
-        (created_at, description, parsed_at, price, title, url, id) 
-    values
-        (?, ?, ?, ?, ?, ?, default)
-Hibernate: 
-    select
-        count(*) 
-    from
-        products p1_0
-]]></system-out>
-  </testcase>
-  <testcase name="shouldUpdateProduct" classname="com.pricesparser.repository.ProductRepositoryTest" time="0.003">
-    <system-out><![CDATA[Hibernate: 
-    insert 
-    into
-        products
-        (created_at, description, parsed_at, price, title, url, id) 
-    values
-        (?, ?, ?, ?, ?, ?, default)
-]]></system-out>
-  </testcase>
-  <testcase name="shouldFindProductByUrl" classname="com.pricesparser.repository.ProductRepositoryTest" time="0.003">
-    <system-out><![CDATA[Hibernate: 
-    insert 
-    into
-        products
-        (created_at, description, parsed_at, price, title, url, id) 
-    values
-        (?, ?, ?, ?, ?, ?, default)
 Hibernate: 
     select
         p1_0.id,
@@ -289,6 +271,208 @@ Hibernate:
         products p1_0 
     where
         p1_0.url=?
+Hibernate: 
+    insert 
+    into
+        products
+        (created_at, description, parsed_at, price, title, url, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        products
+        (created_at, description, parsed_at, price, title, url, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+2025-11-23 17:14:20 - [ProductParse-1763907259956] Товар сохранён: Example Domain
+2025-11-23 17:14:20 - [ProductParse-1763907259955] Товар сохранён: Example Domain
+2025-11-23 17:14:20 - [ASYNC] [2025-11-23 17:14:20] Товар распарсен - URL: https://example.org, Title: Example Domain, Price: 0
+2025-11-23 17:14:20 - [ASYNC] [2025-11-23 17:14:20] Товар распарсен - URL: https://example.com, Title: Example Domain, Price: 0
+2025-11-23 17:14:20 - ✅ Периодический парсинг завершён
+2025-11-23 17:14:21 - [ASYNC] [2025-11-23 17:14:21] Статистика парсинга - Всего: 10, Успешно: 8, Ошибок: 2
+2025-11-23 17:14:21 - Размер очереди логирования: 0
+2025-11-23 17:14:21 - === Конец демонстрации демон-потоков ===
+
+Hibernate: 
+    select
+        count(*) 
+    from
+        products p1_0
+2025-11-23 17:14:21 - === Этап 7: ExecutorService и многопоточный парсинг ===
+2025-11-23 17:14:21 - Запуск парсинга 3 URL через ExecutorService
+2025-11-23 17:14:21 - [ProductParse-1763907261955] Начало парсинга URL: https://example.com
+2025-11-23 17:14:21 - Загрузка HTML с URL: https://example.com
+2025-11-23 17:14:21 - [ProductParse-1763907261955] Начало парсинга URL: https://example.org
+2025-11-23 17:14:21 - Загрузка HTML с URL: https://example.org
+2025-11-23 17:14:21 - Ожидание завершения всех задач парсинга...
+2025-11-23 17:14:21 - [ProductParse-1763907261955] Начало парсинга URL: https://example.net
+2025-11-23 17:14:21 - Загрузка HTML с URL: https://example.net
+2025-11-23 17:14:22 - Успешно загружен HTML с URL: https://example.com (размер: 513 байт)
+2025-11-23 17:14:22 - [ProductParse-1763907261955] HTML загружен, размер: 513 байт
+2025-11-23 17:14:22 - Извлечено - Title: Example Domain, Price: 0, Description: 
+2025-11-23 17:14:22 - [ProductParse-1763907261955] Товар распарсен: title=Example Domain, price=0
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.parsed_at,
+        p1_0.price,
+        p1_0.title,
+        p1_0.url 
+    from
+        products p1_0 
+    where
+        p1_0.url=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.parsed_at,
+        p1_0.price,
+        p1_0.title,
+        p1_0.url 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    update
+        products 
+    set
+        description=?,
+        parsed_at=?,
+        price=?,
+        title=?,
+        url=? 
+    where
+        id=?
+2025-11-23 17:14:22 - [ProductParse-1763907261955] Товар обновлён: Example Domain
+2025-11-23 17:14:22 - [ASYNC] [2025-11-23 17:14:22] Товар распарсен - URL: https://example.com, Title: Example Domain, Price: 0
+2025-11-23 17:14:22 - Успешно загружен HTML с URL: https://example.org (размер: 513 байт)
+2025-11-23 17:14:22 - [ProductParse-1763907261955] HTML загружен, размер: 513 байт
+2025-11-23 17:14:22 - Извлечено - Title: Example Domain, Price: 0, Description: 
+2025-11-23 17:14:22 - [ProductParse-1763907261955] Товар распарсен: title=Example Domain, price=0
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.parsed_at,
+        p1_0.price,
+        p1_0.title,
+        p1_0.url 
+    from
+        products p1_0 
+    where
+        p1_0.url=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.parsed_at,
+        p1_0.price,
+        p1_0.title,
+        p1_0.url 
+    from
+        products p1_0 
+    where
+        p1_0.id=?
+Hibernate: 
+    update
+        products 
+    set
+        description=?,
+        parsed_at=?,
+        price=?,
+        title=?,
+        url=? 
+    where
+        id=?
+2025-11-23 17:14:22 - [ProductParse-1763907261955] Товар обновлён: Example Domain
+2025-11-23 17:14:22 - [ASYNC] [2025-11-23 17:14:22] Товар распарсен - URL: https://example.org, Title: Example Domain, Price: 0
+2025-11-23 17:14:22 - Успешно загружен HTML с URL: https://example.net (размер: 513 байт)
+2025-11-23 17:14:22 - [ProductParse-1763907261955] HTML загружен, размер: 513 байт
+2025-11-23 17:14:22 - Извлечено - Title: Example Domain, Price: 0, Description: 
+2025-11-23 17:14:22 - [ProductParse-1763907261955] Товар распарсен: title=Example Domain, price=0
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.created_at,
+        p1_0.description,
+        p1_0.parsed_at,
+        p1_0.price,
+        p1_0.title,
+        p1_0.url 
+    from
+        products p1_0 
+    where
+        p1_0.url=?
+Hibernate: 
+    insert 
+    into
+        products
+        (created_at, description, parsed_at, price, title, url, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+2025-11-23 17:14:22 - [ProductParse-1763907261955] Товар сохранён: Example Domain
+2025-11-23 17:14:22 - [ASYNC] [2025-11-23 17:14:22] Товар распарсен - URL: https://example.net, Title: Example Domain, Price: 0
+2025-11-23 17:14:22 - ✅ Все задачи завершены за 513 мс
+2025-11-23 17:14:22 - ✅ Распарсен: Example Domain (цена: 0)
+2025-11-23 17:14:22 - ✅ Распарсен: Example Domain (цена: 0)
+2025-11-23 17:14:22 - ✅ Распарсен: Example Domain (цена: 0)
+2025-11-23 17:14:22 - Успешно распарсено: 3 из 3
+2025-11-23 17:14:22 - === Конец демонстрации ExecutorService ===
+
+2025-11-23 17:14:22 - === Этап 9: ScheduledExecutorService ===
+2025-11-23 17:14:22 - ScheduledExecutorService - это ExecutorService для выполнения задач по расписанию:
+2025-11-23 17:14:22 - 1. schedule() - выполнить задачу один раз через указанное время
+2025-11-23 17:14:22 - 2. scheduleAtFixedRate() - выполнять задачу периодически с фиксированной частотой
+2025-11-23 17:14:22 - 3. scheduleWithFixedDelay() - выполнять задачу периодически с фиксированной задержкой
+2025-11-23 17:14:22 - Периодический парсинг будет запускаться каждые 30 секунд
+2025-11-23 17:14:22 - === Конец демонстрации ScheduledExecutorService ===
+
+2025-11-23 17:14:22 - === Начало тестирования потоков ===
+2025-11-23 17:14:22 - Запуск 3 потоков...
+2025-11-23 17:14:22 - Thread [ParseThread-product4] начал парсинг URL: https://example.com/product4
+2025-11-23 17:14:22 - Thread [ParseThread-product5] начал парсинг URL: https://example.com/product5
+2025-11-23 17:14:22 - Ожидание завершения всех потоков...
+2025-11-23 17:14:22 - Thread [ParseThread-product6] начал парсинг URL: https://example.com/product6
+Hibernate: 
+    insert 
+    into
+        products
+        (created_at, description, parsed_at, price, title, url, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        products
+        (created_at, description, parsed_at, price, title, url, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+2025-11-23 17:14:23 - Thread [ParseThread-product4] успешно сохранил товар: Товар с https://example.com/product4
+2025-11-23 17:14:23 - Thread [ParseThread-product6] успешно сохранил товар: Товар с https://example.com/product6
+Hibernate: 
+    insert 
+    into
+        products
+        (created_at, description, parsed_at, price, title, url, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+2025-11-23 17:14:23 - Thread [ParseThread-product5] успешно сохранил товар: Товар с https://example.com/product5
+Hibernate: 
+    select
+        count(*) 
+    from
+        products p1_0
+2025-11-23 17:14:23 - Все потоки завершены. Всего товаров в БД: 9
+2025-11-23 17:14:23 - === Конец тестирования потоков ===
 ]]></system-out>
   </testcase>
+  <testcase name="shouldHaveCorrectConfiguration" classname="com.pricesparser.config.ThreadPoolConfigTest" time="0.002"/>
 </testsuite>
