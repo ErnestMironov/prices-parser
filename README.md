@@ -1,54 +1,54 @@
 # Prices Parser
 
-A Spring Boot application for parsing product information (title, price, description) from web pages and storing the results in a database.
+Spring Boot приложение для парсинга информации о товарах (название, цена, описание) с веб-страниц и сохранения результатов в базу данных.
 
-## Features
+## Возможности
 
-- Asynchronous web scraping using Jsoup
-- RESTful API for managing parsing tasks and retrieving results
-- H2 in-memory database with web console access
-- Multithreading with configurable thread pools
-- Product filtering, sorting, and pagination
+- Асинхронный парсинг веб-страниц с использованием Jsoup
+- RESTful API для управления задачами парсинга и получения результатов
+- In-memory база данных H2 с веб-консолью для просмотра
+- Многопоточность с настраиваемым пулом потоков
+- Фильтрация, сортировка и пагинация товаров
 
-## Requirements
+## Требования
 
 - Java 21
 - Maven 3.6+
 
-## Installation and Running
+## Установка и запуск
 
-1. Clone the repository:
+1. Клонируйте репозиторий:
 ```bash
 git clone <repository-url>
 cd prices-parser
 ```
 
-2. Build the application:
+2. Соберите приложение:
 ```bash
 mvn clean install
 ```
 
-3. Run the application:
+3. Запустите приложение:
 ```bash
 mvn spring-boot:run
 ```
 
-Or run the compiled JAR:
+Или запустите скомпилированный JAR:
 ```bash
 java -jar target/prices-parser-1.0.0.jar
 ```
 
-The application will start on `http://localhost:8080`
+Приложение запустится по адресу `http://localhost:8080`
 
-## API Endpoints
+## API эндпоинты
 
-### Parse Products
+### Парсинг товаров
 
-Start parsing products from provided URLs:
+Запуск парсинга товаров по переданным URL:
 
 **POST** `/api/parse`
 
-Request body:
+Тело запроса:
 ```json
 {
   "urls": [
@@ -58,35 +58,35 @@ Request body:
 }
 ```
 
-Response: `202 Accepted` - parsing started asynchronously
+Ответ: `202 Accepted` - парсинг запущен асинхронно
 
-### Get Parsing Results
+### Получение результатов парсинга
 
-Retrieve parsed products with pagination and sorting:
+Получение спарсенных товаров с пагинацией и сортировкой:
 
 **GET** `/api/results`
 
-Query parameters:
-- `page` - page number (default: 0)
-- `size` - items per page (default: 10)
-- `sortBy` - field to sort by (default: "id")
-- `sortDir` - sort direction: "asc" or "desc" (default: "asc")
+Параметры запроса:
+- `page` - номер страницы (по умолчанию: 0)
+- `size` - количество элементов на странице (по умолчанию: 10)
+- `sortBy` - поле для сортировки (по умолчанию: "id")
+- `sortDir` - направление сортировки: "asc" или "desc" (по умолчанию: "asc")
 
-Example:
+Пример:
 ```bash
 curl "http://localhost:8080/api/results?page=0&size=20&sortBy=price&sortDir=desc"
 ```
 
-Response:
+Пример ответа:
 ```json
 {
   "content": [
     {
       "id": 1,
       "url": "https://example.com/product",
-      "title": "Product Name",
+      "title": "Название товара",
       "price": 99.99,
-      "description": "Product description",
+      "description": "Описание товара",
       "parsedAt": "2025-11-23T10:30:00"
     }
   ],
@@ -97,89 +97,89 @@ Response:
 }
 ```
 
-### Get Products with Filters
+### Получение товаров с фильтрами
 
 **GET** `/api/products`
 
-Query parameters:
-- `page` - page number
-- `size` - items per page
-- `sortBy` - field to sort by
-- `sortDir` - sort direction
-- `minPrice` - minimum price filter
-- `maxPrice` - maximum price filter
-- `titleFilter` - search by title
+Параметры запроса:
+- `page` - номер страницы
+- `size` - количество элементов на странице
+- `sortBy` - поле для сортировки
+- `sortDir` - направление сортировки
+- `minPrice` - минимальная цена (фильтр)
+- `maxPrice` - максимальная цена (фильтр)
+- `titleFilter` - поиск по названию
 
-Example:
+Пример:
 ```bash
 curl "http://localhost:8080/api/products?minPrice=50&maxPrice=200&titleFilter=phone"
 ```
 
-### Get Product Count
+### Получение количества товаров
 
 **GET** `/api/products/count`
 
-Returns total number of products in database.
+Возвращает общее количество товаров в базе данных.
 
-### Get Expensive Products
+### Получение дорогих товаров
 
 **GET** `/api/products/expensive?threshold=100`
 
-Returns products with price above threshold.
+Возвращает товары с ценой выше указанного порога.
 
-### Get Products Sorted by Price
+### Получение товаров, отсортированных по цене
 
 **GET** `/api/products/sorted-by-price`
 
-Returns all products sorted by price in descending order.
+Возвращает все товары, отсортированные по цене по убыванию.
 
-## Database Access
+## Доступ к базе данных
 
-The application uses H2 in-memory database. You can access the database console in your browser:
+Приложение использует in-memory базу данных H2. Вы можете получить доступ к консоли базы данных через браузер:
 
 **URL:** `http://localhost:8080/h2-console`
 
-**Connection settings:**
+**Параметры подключения:**
 - JDBC URL: `jdbc:h2:mem:pricesdb`
 - Username: `sa`
-- Password: *(leave empty)*
+- Password: *(оставьте пустым)*
 
-Click "Connect" to access the database and run SQL queries directly in the browser.
+Нажмите "Connect" для доступа к базе данных и выполнения SQL-запросов прямо в браузере.
 
-## Configuration
+## Конфигурация
 
-Application settings can be modified in `src/main/resources/application.properties`:
+Настройки приложения можно изменить в файле `src/main/resources/application.properties`:
 
-- Server port: `server.port=8080`
-- Thread pool size: `parser.thread-pool.core-size=5`
-- Database settings: H2 configuration
-- Logging levels
+- Порт сервера: `server.port=8080`
+- Размер пула потоков: `parser.thread-pool.core-size=5`
+- Настройки базы данных: конфигурация H2
+- Уровни логирования
 
-## Project Structure
+## Структура проекта
 
 ```
 src/main/java/com/pricesparser/
-├── client/          # HTTP clients for external requests
-├── config/          # Spring configuration classes
-├── controller/      # REST API controllers
-├── dto/             # Data transfer objects
-├── model/           # JPA entities
-├── parser/          # Web scraping logic
-├── queue/           # URL queue management
-├── repository/      # JPA repositories
-├── service/         # Business logic services
-├── task/            # Async task definitions
-└── util/            # Utility classes
+├── client/          # HTTP клиенты для внешних запросов
+├── config/          # Классы конфигурации Spring
+├── controller/      # REST API контроллеры
+├── dto/             # Объекты передачи данных
+├── model/           # JPA сущности
+├── parser/          # Логика парсинга веб-страниц
+├── queue/           # Управление очередью URL
+├── repository/      # JPA репозитории
+├── service/         # Бизнес-логика сервисов
+├── task/            # Определения асинхронных задач
+└── util/            # Утилитарные классы
 ```
 
-## Testing
+## Тестирование
 
-Run tests:
+Запуск тестов:
 ```bash
 mvn test
 ```
 
-## Technologies
+## Технологии
 
 - Spring Boot 3.2.0
 - Spring Data JPA
