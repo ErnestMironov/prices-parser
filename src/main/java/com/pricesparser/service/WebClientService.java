@@ -39,9 +39,13 @@ public class WebClientService {
         }).doBeforeRetry(
             retrySignal -> logger.warn("Повторная попытка загрузки URL: {} (попытка {})", url,
                 retrySignal.totalRetries() + 1)))
-        .doOnSuccess(html -> logger.debug("Успешно загружен HTML с URL: {} (размер: {} байт)", url,
-            html.length()))
-        .doOnError(error -> {
+        .doOnSuccess(html -> {
+          if (html != null && !html.isEmpty()) {
+            logger.debug("Успешно загружен HTML с URL: {} (размер: {} байт)", url, html.length());
+          } else {
+            logger.warn("HTML пустой или null для URL: {}", url);
+          }
+        }).doOnError(error -> {
           if (error instanceof WebClientResponseException e) {
             logger.error("Ошибка HTTP при загрузке URL {}: статус {}, сообщение: {}", url,
                 e.getStatusCode(), e.getMessage());
@@ -53,7 +57,12 @@ public class WebClientService {
 
   public String fetchHtmlBlocking(String url) {
     try {
-      return fetchHtml(url).block(Duration.ofSeconds(15));
+      String html = fetchHtml(url).block(Duration.ofSeconds(15));
+      if (html == null || html.isEmpty()) {
+        logger.warn("HTML вернулся null или пустой для URL: {}", url);
+        throw new RuntimeException("Не удалось загрузить страницу: HTML пустой или null");
+      }
+      return html;
     } catch (Exception e) {
       logger.error("Ошибка при блокирующей загрузке URL {}: {}", url, e.getMessage());
       throw new RuntimeException("Не удалось загрузить страницу: " + e.getMessage(), e);

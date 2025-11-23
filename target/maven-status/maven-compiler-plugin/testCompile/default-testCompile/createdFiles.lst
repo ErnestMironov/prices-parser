@@ -1,0 +1,14 @@
+com/pricesparser/parser/UniversalProductParserTest.class
+com/pricesparser/queue/UrlQueueTest.class
+com/pricesparser/util/ThreadSafeCounterTest.class
+com/pricesparser/service/ScheduledParseServiceTest.class
+com/pricesparser/service/WebClientServiceTest.class
+com/pricesparser/service/RestTemplateServiceTest.class
+com/pricesparser/service/ProductServiceTest.class
+com/pricesparser/repository/ProductRepositoryTest.class
+com/pricesparser/controller/ProductControllerTest.class
+com/pricesparser/service/AsyncLoggingServiceTest.class
+com/pricesparser/service/ProductParseServiceTest.class
+com/pricesparser/config/ThreadPoolConfigTest.class
+com/pricesparser/controller/ParseControllerTest.class
+com/pricesparser/service/FeignClientServiceTest.class

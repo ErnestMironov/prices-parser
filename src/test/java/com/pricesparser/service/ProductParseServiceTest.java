@@ -23,7 +23,6 @@ import com.pricesparser.repository.ProductRepository;
 class ProductParseServiceTest {
 
   private ExecutorService executorService;
-  private WebClientService webClientService;
   private UniversalProductParser parser;
   private ProductRepository productRepository;
   private AsyncLoggingService asyncLoggingService;
@@ -32,13 +31,12 @@ class ProductParseServiceTest {
   @BeforeEach
   void setUp() {
     executorService = Executors.newFixedThreadPool(3);
-    webClientService = mock(WebClientService.class);
     parser = mock(UniversalProductParser.class);
     productRepository = mock(ProductRepository.class);
     asyncLoggingService = mock(AsyncLoggingService.class);
 
-    productParseService = new ProductParseService(executorService, webClientService, parser,
-        productRepository, asyncLoggingService);
+    productParseService =
+        new ProductParseService(executorService, parser, productRepository, asyncLoggingService);
   }
 
   @AfterEach
@@ -50,13 +48,10 @@ class ProductParseServiceTest {
   @DisplayName("Должен распарсить товар асинхронно")
   void shouldParseProductAsync() throws Exception {
     String url = "https://example.com/product";
-    String html =
-        "<html><head><title>Test Product</title></head><body><h1>Test Product</h1></body></html>";
     Product expectedProduct =
         new Product(url, "Test Product", new BigDecimal("99.99"), "Description");
 
-    when(webClientService.fetchHtmlBlocking(url)).thenReturn(html);
-    when(parser.parseFromHtml(url, html)).thenReturn(expectedProduct);
+    when(parser.parse(url)).thenReturn(expectedProduct);
     when(productRepository.findByUrl(url)).thenReturn(java.util.Optional.empty());
     when(productRepository.save(any(Product.class))).thenReturn(expectedProduct);
 
@@ -74,12 +69,9 @@ class ProductParseServiceTest {
     List<String> urls = List.of("https://example.com/product1", "https://example.com/product2",
         "https://example.com/product3");
 
-    String html = "<html><head><title>Product</title></head></html>";
-
     for (String url : urls) {
       Product product = new Product(url, "Product", new BigDecimal("99.99"), "Description");
-      when(webClientService.fetchHtmlBlocking(url)).thenReturn(html);
-      when(parser.parseFromHtml(url, html)).thenReturn(product);
+      when(parser.parse(url)).thenReturn(product);
       when(productRepository.findByUrl(url)).thenReturn(java.util.Optional.empty());
       when(productRepository.save(any(Product.class))).thenReturn(product);
     }

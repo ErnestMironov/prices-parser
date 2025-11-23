@@ -19,16 +19,13 @@ public class ProductParseService {
   private static final Logger logger = LoggerFactory.getLogger(ProductParseService.class);
 
   private final ExecutorService executorService;
-  private final WebClientService webClientService;
   private final UniversalProductParser parser;
   private final ProductRepository productRepository;
   private final AsyncLoggingService asyncLoggingService;
 
-  public ProductParseService(ExecutorService productParseExecutor,
-      WebClientService webClientService, UniversalProductParser parser,
+  public ProductParseService(ExecutorService productParseExecutor, UniversalProductParser parser,
       ProductRepository productRepository, AsyncLoggingService asyncLoggingService) {
     this.executorService = productParseExecutor;
-    this.webClientService = webClientService;
     this.parser = parser;
     this.productRepository = productRepository;
     this.asyncLoggingService = asyncLoggingService;
@@ -43,10 +40,7 @@ public class ProductParseService {
     logger.info("[{}] Начало парсинга URL: {}", threadName, url);
 
     try {
-      String html = webClientService.fetchHtmlBlocking(url);
-      logger.debug("[{}] HTML загружен, размер: {} байт", threadName, html.length());
-
-      Product product = parser.parseFromHtml(url, html);
+      Product product = parser.parse(url);
       logger.debug("[{}] Товар распарсен: title={}, price={}", threadName, product.getTitle(),
           product.getPrice());
 
@@ -89,5 +83,25 @@ public class ProductParseService {
         return null;
       }
     }).filter(product -> product != null).toList();
+  }
+
+  public int parseProductsBatch(List<String> urls) {
+    logger.info("Обработка батча из {} URL", urls.size());
+    List<Future<Product>> futures = parseProductsAsync(urls);
+
+    int successCount = 0;
+    for (Future<Product> future : futures) {
+      try {
+        Product product = future.get();
+        if (product != null) {
+          successCount++;
+        }
+      } catch (Exception e) {
+        logger.error("Ошибка при получении результата парсинга: {}", e.getMessage());
+      }
+    }
+
+    logger.info("Батч обработан: успешно {}/{}", successCount, urls.size());
+    return successCount;
   }
 }

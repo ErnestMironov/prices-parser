@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
 @Service
@@ -29,7 +28,7 @@ public class ScheduledParseService implements CommandLineRunner {
     this.productParseService = productParseService;
   }
 
-  @PostConstruct
+  // @PostConstruct
   public void startScheduledTasks() {
     logger.info("Инициализация периодических задач парсинга");
 

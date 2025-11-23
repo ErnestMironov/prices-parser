@@ -5,10 +5,10 @@
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/client/ProductHtmlClient.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/queue/UrlQueue.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/AsyncLoggingService.java
-/Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/DataInitializer.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/ThreadTestService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/task/ProductParseTask.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/config/RestTemplateConfig.java
+/Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/ProductLinksLoaderService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/InterServiceDemoService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/WebClientService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/BlockingStructuresDemoService.java
