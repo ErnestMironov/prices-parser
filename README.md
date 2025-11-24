@@ -25,17 +25,20 @@ Spring Boot приложение для парсинга информации о
 ## Установка и запуск
 
 1. Клонируйте репозиторий:
+
 ```bash
 git clone <repository-url>
 cd prices-parser
 ```
 
 2. Соберите приложение:
+
 ```bash
 mvn clean install
 ```
 
 3. Запустите приложение:
+
 ```bash
 mvn spring-boot:run
 ```
@@ -61,17 +64,20 @@ mvn spring-boot:run
 **GET** `/api/results`
 
 Параметры запроса:
+
 - `page` - номер страницы (по умолчанию: 0)
 - `size` - количество элементов на странице (по умолчанию: 10)
 - `sortBy` - поле для сортировки (по умолчанию: "id")
 - `sortDir` - направление сортировки: "asc" или "desc" (по умолчанию: "asc")
 
 Пример:
+
 ```bash
 curl "http://localhost:8080/api/results?page=0&size=20&sortBy=price&sortDir=desc"
 ```
 
 Пример ответа:
+
 ```json
 {
   "content": [
@@ -98,6 +104,7 @@ curl "http://localhost:8080/api/results?page=0&size=20&sortBy=price&sortDir=desc
 **POST** `/api/parse`
 
 Тело запроса:
+
 ```json
 {
   "urls": [
@@ -118,11 +125,13 @@ curl "http://localhost:8080/api/results?page=0&size=20&sortBy=price&sortDir=desc
 **URL:** `http://localhost:8080/h2-console`
 
 **Параметры подключения:**
+
 - JDBC URL: `jdbc:h2:mem:pricesdb`
 - Username: `sa`
-- Password: *(оставьте пустым)*
+- Password: _(оставьте пустым)_
 
 Нажмите "Connect" для доступа к базе данных. После подключения вы можете:
+
 - Просматривать таблицу `PRODUCTS` со всеми товарами
 - Выполнять SQL-запросы (например: `SELECT * FROM PRODUCTS ORDER BY PRICE DESC`)
 - Проверять статистику парсинга (`SELECT COUNT(*) FROM PRODUCTS`)
@@ -139,8 +148,9 @@ curl "http://localhost:8080/api/results?page=0&size=20&sortBy=price&sortDir=desc
 Для изменения списка ссылок для автоматического парсинга отредактируйте файл `src/main/resources/product_links.json`.
 
 Настройки парсинга в `ScheduledTaskService.java`:
-- `BATCH_SIZE = 5` - количество товаров в одном батче
-- `DELAY_BETWEEN_BATCHES_MS = 3000` - задержка между батчами (3 секунды)
+
+- `BATCH_SIZE = 2` - количество товаров в одном батче
+- `DELAY_BETWEEN_BATCHES_MS = 10000` - задержка между батчами (10 секунд)
 
 ## Структура проекта
 
@@ -162,6 +172,7 @@ src/main/java/com/pricesparser/
 ## Тестирование
 
 Запуск тестов:
+
 ```bash
 mvn test
 ```
