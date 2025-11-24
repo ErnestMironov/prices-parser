@@ -22,8 +22,8 @@ public class ScheduledTaskService implements CommandLineRunner {
 
   private List<String> allUrls = new ArrayList<>();
   private final AtomicInteger currentIndex = new AtomicInteger(0);
-  private static final int BATCH_SIZE = 5;
-  private static final long DELAY_BETWEEN_BATCHES_MS = 3000;
+  private static final int BATCH_SIZE = 2;
+  private static final long DELAY_BETWEEN_BATCHES_MS = 10000;
 
   public ScheduledTaskService(ProductParseService productParseService,
       ProductLinksLoaderService linksLoaderService) {
