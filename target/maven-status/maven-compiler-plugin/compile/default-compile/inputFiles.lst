@@ -26,6 +26,7 @@
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/parser/ProductParser.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/config/SchedulerConfig.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/repository/ProductRepository.java
+/Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/config/MetricsConfig.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/FeignClientService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/ScheduledParseService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/dto/ParseRequest.java

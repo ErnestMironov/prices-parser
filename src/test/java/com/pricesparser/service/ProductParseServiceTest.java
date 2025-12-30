@@ -19,6 +19,11 @@ import com.pricesparser.model.Product;
 import com.pricesparser.parser.UniversalProductParser;
 import com.pricesparser.repository.ProductRepository;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 @DisplayName("ProductParseService Tests")
 class ProductParseServiceTest {
 
@@ -26,6 +31,11 @@ class ProductParseServiceTest {
   private UniversalProductParser parser;
   private ProductRepository productRepository;
   private AsyncLoggingService asyncLoggingService;
+  private MeterRegistry meterRegistry;
+  private Timer parseDurationTimer;
+  private Counter parseSuccessCounter;
+  private Counter parseErrorsCounter;
+  private Counter productsSavedCounter;
   private ProductParseService productParseService;
 
   @BeforeEach
@@ -35,8 +45,15 @@ class ProductParseServiceTest {
     productRepository = mock(ProductRepository.class);
     asyncLoggingService = mock(AsyncLoggingService.class);
 
+    meterRegistry = new SimpleMeterRegistry();
+    parseDurationTimer = Timer.builder("parse_duration_seconds").register(meterRegistry);
+    parseSuccessCounter = Counter.builder("parse_success_total").register(meterRegistry);
+    parseErrorsCounter = Counter.builder("parse_errors_total").register(meterRegistry);
+    productsSavedCounter = Counter.builder("products_saved_total").register(meterRegistry);
+
     productParseService =
-        new ProductParseService(executorService, parser, productRepository, asyncLoggingService);
+        new ProductParseService(executorService, parser, productRepository, asyncLoggingService,
+            parseDurationTimer, parseSuccessCounter, parseErrorsCounter, productsSavedCounter);
   }
 
   @AfterEach

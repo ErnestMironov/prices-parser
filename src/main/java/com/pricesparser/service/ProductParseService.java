@@ -13,6 +13,9 @@ import com.pricesparser.model.Product;
 import com.pricesparser.parser.UniversalProductParser;
 import com.pricesparser.repository.ProductRepository;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.Timer;
+
 @Service
 public class ProductParseService {
 
@@ -22,13 +25,23 @@ public class ProductParseService {
   private final UniversalProductParser parser;
   private final ProductRepository productRepository;
   private final AsyncLoggingService asyncLoggingService;
+  private final Timer parseDurationTimer;
+  private final Counter parseSuccessCounter;
+  private final Counter parseErrorsCounter;
+  private final Counter productsSavedCounter;
 
   public ProductParseService(ExecutorService productParseExecutor, UniversalProductParser parser,
-      ProductRepository productRepository, AsyncLoggingService asyncLoggingService) {
+      ProductRepository productRepository, AsyncLoggingService asyncLoggingService,
+      Timer parseDurationTimer, Counter parseSuccessCounter, Counter parseErrorsCounter,
+      Counter productsSavedCounter) {
     this.executorService = productParseExecutor;
     this.parser = parser;
     this.productRepository = productRepository;
     this.asyncLoggingService = asyncLoggingService;
+    this.parseDurationTimer = parseDurationTimer;
+    this.parseSuccessCounter = parseSuccessCounter;
+    this.parseErrorsCounter = parseErrorsCounter;
+    this.productsSavedCounter = productsSavedCounter;
   }
 
   public Future<Product> parseProductAsync(String url) {
@@ -40,28 +53,40 @@ public class ProductParseService {
     logger.info("[{}] Начало парсинга URL: {}", threadName, url);
 
     try {
-      Product product = parser.parse(url);
-      logger.debug("[{}] Товар распарсен: title={}, price={}", threadName, product.getTitle(),
-          product.getPrice());
+      return parseDurationTimer.recordCallable(() -> {
+        try {
+          Product product = parser.parse(url);
+          logger.debug("[{}] Товар распарсен: title={}, price={}", threadName, product.getTitle(),
+              product.getPrice());
 
-      Product existing = productRepository.findByUrl(url).orElse(null);
-      if (existing != null) {
-        product.setId(existing.getId());
-        product.setCreatedAt(existing.getCreatedAt());
-        product = productRepository.save(product);
-        logger.info("[{}] Товар обновлён: {}", threadName, product.getTitle());
-        asyncLoggingService.logProductAsync(url, product.getTitle(), product.getPrice());
-      } else {
-        product = productRepository.save(product);
-        logger.info("[{}] Товар сохранён: {}", threadName, product.getTitle());
-        asyncLoggingService.logProductAsync(url, product.getTitle(), product.getPrice());
-      }
+          Product existing = productRepository.findByUrl(url).orElse(null);
+          if (existing != null) {
+            product.setId(existing.getId());
+            product.setCreatedAt(existing.getCreatedAt());
+            product = productRepository.save(product);
+            logger.info("[{}] Товар обновлён: {}", threadName, product.getTitle());
+            asyncLoggingService.logProductAsync(url, product.getTitle(), product.getPrice());
+          } else {
+            product = productRepository.save(product);
+            logger.info("[{}] Товар сохранён: {}", threadName, product.getTitle());
+            asyncLoggingService.logProductAsync(url, product.getTitle(), product.getPrice());
+          }
 
-      return product;
+          parseSuccessCounter.increment();
+          productsSavedCounter.increment();
+          return product;
 
+        } catch (Exception e) {
+          logger.error("[{}] Ошибка при парсинге URL {}: {}", threadName, url, e.getMessage(), e);
+          asyncLoggingService.logErrorAsync(url, e.getMessage());
+          parseErrorsCounter.increment();
+          throw new RuntimeException("Не удалось распарсить товар по URL: " + url, e);
+        }
+      });
     } catch (Exception e) {
-      logger.error("[{}] Ошибка при парсинге URL {}: {}", threadName, url, e.getMessage(), e);
-      asyncLoggingService.logErrorAsync(url, e.getMessage());
+      logger.error("[{}] Ошибка при измерении времени парсинга URL {}: {}", threadName, url,
+          e.getMessage(), e);
+      parseErrorsCounter.increment();
       throw new RuntimeException("Не удалось распарсить товар по URL: " + url, e);
     }
   }

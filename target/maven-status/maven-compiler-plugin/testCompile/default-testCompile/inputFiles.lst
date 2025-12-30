@@ -7,6 +7,7 @@
 /Users/ernest/Desktop/prices-parser/src/test/java/com/pricesparser/service/AsyncLoggingServiceTest.java
 /Users/ernest/Desktop/prices-parser/src/test/java/com/pricesparser/controller/ParseControllerTest.java
 /Users/ernest/Desktop/prices-parser/src/test/java/com/pricesparser/queue/UrlQueueTest.java
+/Users/ernest/Desktop/prices-parser/src/test/java/com/pricesparser/config/MetricsConfig.java
 /Users/ernest/Desktop/prices-parser/src/test/java/com/pricesparser/repository/ProductRepositoryTest.java
 /Users/ernest/Desktop/prices-parser/src/test/java/com/pricesparser/service/FeignClientServiceTest.java
 /Users/ernest/Desktop/prices-parser/src/test/java/com/pricesparser/service/RestTemplateServiceTest.java

@@ -5,6 +5,7 @@ com/pricesparser/service/InterServiceDemoService.class
 com/pricesparser/config/WebClientConfig.class
 com/pricesparser/service/DaemonThreadDemoService.class
 com/pricesparser/model/Product.class
+com/pricesparser/service/ProductLinksLoaderService$2.class
 com/pricesparser/client/ProductHtmlClient.class
 com/pricesparser/repository/ProductRepository.class
 com/pricesparser/parser/UniversalProductParser.class
@@ -28,4 +29,6 @@ com/pricesparser/config/SchedulerConfig.class
 com/pricesparser/service/AsyncLoggingService.class
 com/pricesparser/controller/ProductController.class
 com/pricesparser/service/ProductParseService.class
+com/pricesparser/service/ProductLinksLoaderService$1.class
 com/pricesparser/config/RestTemplateConfig.class
+com/pricesparser/service/ProductLinksLoaderService.class

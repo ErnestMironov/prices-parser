@@ -10,5 +10,6 @@ com/pricesparser/controller/ProductControllerTest.class
 com/pricesparser/service/AsyncLoggingServiceTest.class
 com/pricesparser/service/ProductParseServiceTest.class
 com/pricesparser/config/ThreadPoolConfigTest.class
+com/pricesparser/config/MetricsConfig.class
 com/pricesparser/controller/ParseControllerTest.class
 com/pricesparser/service/FeignClientServiceTest.class
