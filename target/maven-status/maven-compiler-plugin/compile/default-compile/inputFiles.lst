@@ -1,6 +1,7 @@
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/ScheduledTaskService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/ProductParseService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/ProductService.java
+/Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/benchmark/ParsingBenchmark.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/service/RestTemplateService.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/client/ProductHtmlClient.java
 /Users/ernest/Desktop/prices-parser/src/main/java/com/pricesparser/queue/UrlQueue.java

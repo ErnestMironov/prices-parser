@@ -76,7 +76,7 @@ class UrlQueueTest {
 
     for (String url : urls) {
       String result = urlQueue.take();
-      assertThat(result).isIn(urls);
+      assertThat(result).isIn((Object[]) urls);
     }
 
     assertThat(urlQueue.isEmpty()).isTrue();

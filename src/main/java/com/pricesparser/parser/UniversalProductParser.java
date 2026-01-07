@@ -239,8 +239,7 @@ public class UniversalProductParser implements ProductParser {
     }
 
     try {
-      String cleanPrice =
-          priceText.replaceAll("[^0-9.,\\s]", "").replace(",", ".").replaceAll("\\s+", "").trim();
+      String cleanPrice = priceText.replaceAll("[^0-9.,]", "").replace(",", ".");
 
       if (cleanPrice.isEmpty()) {
         return BigDecimal.ZERO;
