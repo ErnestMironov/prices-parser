@@ -2,9 +2,9 @@ package com.pricesparser.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.AfterEach;
@@ -72,7 +72,7 @@ class ProductParseServiceTest {
     when(productRepository.findByUrl(url)).thenReturn(java.util.Optional.empty());
     when(productRepository.save(any(Product.class))).thenReturn(expectedProduct);
 
-    Future<Product> future = productParseService.parseProductAsync(url);
+    CompletableFuture<Product> future = productParseService.parseProductAsync(url);
     Product result = future.get();
 
     assertThat(result).isNotNull();
@@ -93,11 +93,11 @@ class ProductParseServiceTest {
       when(productRepository.save(any(Product.class))).thenReturn(product);
     }
 
-    List<Future<Product>> futures = productParseService.parseProductsAsync(urls);
+    List<CompletableFuture<Product>> futures = productParseService.parseProductsAsync(urls);
 
     assertThat(futures).hasSize(3);
 
-    for (Future<Product> future : futures) {
+    for (CompletableFuture<Product> future : futures) {
       Product product = future.get();
       assertThat(product).isNotNull();
       assertThat(product.getTitle()).isEqualTo("Product");

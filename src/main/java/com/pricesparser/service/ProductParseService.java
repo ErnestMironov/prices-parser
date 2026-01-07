@@ -3,7 +3,6 @@ package com.pricesparser.service;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +43,7 @@ public class ProductParseService {
     this.productsSavedCounter = productsSavedCounter;
   }
 
-  public Future<Product> parseProductAsync(String url) {
+  public CompletableFuture<Product> parseProductAsync(String url) {
     return CompletableFuture.supplyAsync(() -> parseProduct(url), executorService);
   }
 
@@ -91,40 +90,49 @@ public class ProductParseService {
     }
   }
 
-  public List<Future<Product>> parseProductsAsync(List<String> urls) {
+  public List<CompletableFuture<Product>> parseProductsAsync(List<String> urls) {
     logger.info("Запуск параллельного парсинга {} URL", urls.size());
     return urls.stream().map(this::parseProductAsync).toList();
   }
 
   public List<Product> parseProducts(List<String> urls) {
     logger.info("Запуск параллельного парсинга {} URL", urls.size());
-    List<Future<Product>> futures = parseProductsAsync(urls);
+    List<CompletableFuture<Product>> futures = parseProductsAsync(urls);
 
-    return futures.stream().map(future -> {
+    CompletableFuture<Void> allFutures =
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+
+    return allFutures.thenApply(v -> futures.stream().map(future -> {
       try {
-        return future.get();
+        return future.join();
       } catch (Exception e) {
         logger.error("Ошибка при получении результата парсинга: {}", e.getMessage());
         return null;
       }
-    }).filter(product -> product != null).toList();
+    }).filter(product -> product != null).toList()).join();
   }
 
   public int parseProductsBatch(List<String> urls) {
     logger.info("Обработка батча из {} URL", urls.size());
-    List<Future<Product>> futures = parseProductsAsync(urls);
+    List<CompletableFuture<Product>> futures = parseProductsAsync(urls);
 
-    int successCount = 0;
-    for (Future<Product> future : futures) {
-      try {
-        Product product = future.get();
-        if (product != null) {
-          successCount++;
+    CompletableFuture<Void> allFutures =
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+
+    int successCount = allFutures.thenApply(v -> {
+      int count = 0;
+      for (CompletableFuture<Product> future : futures) {
+        try {
+          Product product = future.join();
+          if (product != null) {
+            count++;
+          }
+        } catch (Exception e) {
+          logger.error("Ошибка при получении результата парсинга: {}", e.getMessage());
         }
-      } catch (Exception e) {
-        logger.error("Ошибка при получении результата парсинга: {}", e.getMessage());
       }
-    }
+      return count;
+    }).join();
 
     logger.info("Батч обработан: успешно {}/{}", successCount, urls.size());
     return successCount;
