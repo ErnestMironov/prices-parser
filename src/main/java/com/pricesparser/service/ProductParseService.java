@@ -14,6 +14,10 @@ import com.pricesparser.repository.ProductRepository;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Timer;
+import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.context.Scope;
 
 @Service
 public class ProductParseService {
@@ -28,11 +32,12 @@ public class ProductParseService {
   private final Counter parseSuccessCounter;
   private final Counter parseErrorsCounter;
   private final Counter productsSavedCounter;
+  private final Tracer tracer;
 
   public ProductParseService(ExecutorService productParseExecutor, UniversalProductParser parser,
       ProductRepository productRepository, AsyncLoggingService asyncLoggingService,
       Timer parseDurationTimer, Counter parseSuccessCounter, Counter parseErrorsCounter,
-      Counter productsSavedCounter) {
+      Counter productsSavedCounter, OpenTelemetry openTelemetry) {
     this.executorService = productParseExecutor;
     this.parser = parser;
     this.productRepository = productRepository;
@@ -41,6 +46,7 @@ public class ProductParseService {
     this.parseSuccessCounter = parseSuccessCounter;
     this.parseErrorsCounter = parseErrorsCounter;
     this.productsSavedCounter = productsSavedCounter;
+    this.tracer = openTelemetry.getTracer("com.pricesparser.service", "1.0.0");
   }
 
   public CompletableFuture<Product> parseProductAsync(String url) {
@@ -51,34 +57,55 @@ public class ProductParseService {
     String threadName = Thread.currentThread().getName();
     logger.info("[{}] Начало парсинга URL: {}", threadName, url);
 
-    try {
+    Span span = tracer.spanBuilder("parseProduct").setAttribute("url", url).startSpan();
+
+    try (Scope scope = span.makeCurrent()) {
       return parseDurationTimer.recordCallable(() -> {
         try {
           Product product = parser.parse(url);
           logger.debug("[{}] Товар распарсен: title={}, price={}", threadName, product.getTitle(),
               product.getPrice());
 
-          Product existing = productRepository.findByUrl(url).orElse(null);
-          if (existing != null) {
-            product.setId(existing.getId());
-            product.setCreatedAt(existing.getCreatedAt());
-            product = productRepository.save(product);
-            logger.info("[{}] Товар обновлён: {}", threadName, product.getTitle());
-            asyncLoggingService.logProductAsync(url, product.getTitle(), product.getPrice());
-          } else {
-            product = productRepository.save(product);
-            logger.info("[{}] Товар сохранён: {}", threadName, product.getTitle());
-            asyncLoggingService.logProductAsync(url, product.getTitle(), product.getPrice());
+          Span dbSpan = tracer.spanBuilder("db.findByUrl").setAttribute("url", url).startSpan();
+          Product existing;
+          try (Scope dbScope = dbSpan.makeCurrent()) {
+            existing = productRepository.findByUrl(url).orElse(null);
+          } finally {
+            dbSpan.end();
+          }
+
+          Span saveSpan = tracer.spanBuilder("db.save")
+              .setAttribute("product.title", product.getTitle() != null ? product.getTitle() : "")
+              .startSpan();
+          try (Scope saveScope = saveSpan.makeCurrent()) {
+            if (existing != null) {
+              product.setId(existing.getId());
+              product.setCreatedAt(existing.getCreatedAt());
+              product = productRepository.save(product);
+              logger.info("[{}] Товар обновлён: {}", threadName, product.getTitle());
+              asyncLoggingService.logProductAsync(url, product.getTitle(), product.getPrice());
+            } else {
+              product = productRepository.save(product);
+              logger.info("[{}] Товар сохранён: {}", threadName, product.getTitle());
+              asyncLoggingService.logProductAsync(url, product.getTitle(), product.getPrice());
+            }
+          } finally {
+            saveSpan.end();
           }
 
           parseSuccessCounter.increment();
           productsSavedCounter.increment();
+          span.setAttribute("product.title", product.getTitle());
+          span.setAttribute("product.price",
+              product.getPrice() != null ? product.getPrice().toString() : "0");
           return product;
 
         } catch (Exception e) {
           logger.error("[{}] Ошибка при парсинге URL {}: {}", threadName, url, e.getMessage(), e);
           asyncLoggingService.logErrorAsync(url, e.getMessage());
           parseErrorsCounter.increment();
+          span.recordException(e);
+          span.setStatus(io.opentelemetry.api.trace.StatusCode.ERROR, e.getMessage());
           throw new RuntimeException("Не удалось распарсить товар по URL: " + url, e);
         }
       });
@@ -86,7 +113,11 @@ public class ProductParseService {
       logger.error("[{}] Ошибка при измерении времени парсинга URL {}: {}", threadName, url,
           e.getMessage(), e);
       parseErrorsCounter.increment();
+      span.recordException(e);
+      span.setStatus(io.opentelemetry.api.trace.StatusCode.ERROR, e.getMessage());
       throw new RuntimeException("Не удалось распарсить товар по URL: " + url, e);
+    } finally {
+      span.end();
     }
   }
 

@@ -3,11 +3,17 @@ package com.pricesparser.parser;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.pricesparser.model.Product;
+import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.api.trace.Tracer;
 
 @DisplayName("UniversalProductParser Tests")
 class UniversalProductParserTest {
@@ -16,7 +22,10 @@ class UniversalProductParserTest {
     
     @BeforeEach
     void setUp() {
-        parser = new UniversalProductParser();
+        OpenTelemetry openTelemetry = mock(OpenTelemetry.class);
+        Tracer tracer = mock(Tracer.class);
+        when(openTelemetry.getTracer(any(String.class), any(String.class))).thenReturn(tracer);
+        parser = new UniversalProductParser(openTelemetry);
     }
     
     @Test

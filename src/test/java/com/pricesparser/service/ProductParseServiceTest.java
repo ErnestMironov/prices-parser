@@ -23,6 +23,8 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.api.trace.Tracer;
 
 @DisplayName("ProductParseService Tests")
 class ProductParseServiceTest {
@@ -36,6 +38,7 @@ class ProductParseServiceTest {
   private Counter parseSuccessCounter;
   private Counter parseErrorsCounter;
   private Counter productsSavedCounter;
+  private OpenTelemetry openTelemetry;
   private ProductParseService productParseService;
 
   @BeforeEach
@@ -51,9 +54,13 @@ class ProductParseServiceTest {
     parseErrorsCounter = Counter.builder("parse_errors_total").register(meterRegistry);
     productsSavedCounter = Counter.builder("products_saved_total").register(meterRegistry);
 
-    productParseService =
-        new ProductParseService(executorService, parser, productRepository, asyncLoggingService,
-            parseDurationTimer, parseSuccessCounter, parseErrorsCounter, productsSavedCounter);
+    openTelemetry = mock(OpenTelemetry.class);
+    Tracer tracer = mock(Tracer.class);
+    when(openTelemetry.getTracer(any(String.class), any(String.class))).thenReturn(tracer);
+
+    productParseService = new ProductParseService(executorService, parser, productRepository,
+        asyncLoggingService, parseDurationTimer, parseSuccessCounter, parseErrorsCounter,
+        productsSavedCounter, openTelemetry);
   }
 
   @AfterEach

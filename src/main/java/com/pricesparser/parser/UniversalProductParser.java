@@ -13,6 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.pricesparser.model.Product;
+import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.context.Scope;
 
 @Component
 public class UniversalProductParser implements ProductParser {
@@ -25,9 +29,19 @@ public class UniversalProductParser implements ProductParser {
   private static final Pattern PRICE_IN_TEXT_PATTERN = Pattern.compile(
       "([0-9]{1,3}(?:\\s[0-9]{3})*(?:[\\.,][0-9]{2})?)\\s*[рруб₽]", Pattern.CASE_INSENSITIVE);
 
+  private final Tracer tracer;
+
+  public UniversalProductParser(OpenTelemetry openTelemetry) {
+    this.tracer = openTelemetry.getTracer("com.pricesparser.parser", "1.0.0");
+  }
+
   @Override
   public Product parse(String url) {
-    try {
+    Span span = tracer.spanBuilder("fetchHtml")
+        .setAttribute("url", url)
+        .startSpan();
+
+    try (Scope scope = span.makeCurrent()) {
       logger.info("Парсинг URL: {}", url);
 
       Document doc = Jsoup.connect(url).userAgent(
@@ -44,6 +58,9 @@ public class UniversalProductParser implements ProductParser {
       logger.info("HTML загружен, размер: {} байт", html.length());
       logger.info("Title страницы: {}", doc.title());
 
+      span.setAttribute("html.size", html.length());
+      span.setAttribute("page.title", doc.title());
+
       logger.info("Найдено h1 элементов: {}", doc.select("h1").size());
       logger.info("Найдено .product__price элементов: {}", doc.select(".product__price").size());
       logger.info("Найдено div.product__descr элементов: {}",
@@ -58,29 +75,71 @@ public class UniversalProductParser implements ProductParser {
 
     } catch (Exception e) {
       logger.error("Ошибка при парсинге URL {}: {}", url, e.getMessage(), e);
+      span.recordException(e);
+      span.setStatus(io.opentelemetry.api.trace.StatusCode.ERROR, e.getMessage());
       throw new RuntimeException("Не удалось распарсить товар: " + e.getMessage(), e);
+    } finally {
+      span.end();
     }
   }
 
   @Override
   public Product parseFromHtml(String url, String html) {
-    try {
+    Span span = tracer.spanBuilder("parseFromHtml")
+        .setAttribute("url", url)
+        .setAttribute("html.size", html.length())
+        .startSpan();
+
+    try (Scope scope = span.makeCurrent()) {
       Document doc = Jsoup.parse(html);
 
-      String title = extractTitle(doc);
-      BigDecimal price = extractPrice(doc, url);
-      String description = extractDescription(doc);
+      Span titleSpan = tracer.spanBuilder("extractTitle").startSpan();
+      String title = null;
+      try (Scope titleScope = titleSpan.makeCurrent()) {
+        title = extractTitle(doc);
+      } finally {
+        titleSpan.setAttribute("title", title != null ? title : "");
+        titleSpan.end();
+      }
+
+      Span priceSpan = tracer.spanBuilder("extractPrice")
+          .setAttribute("url", url)
+          .startSpan();
+      BigDecimal price = null;
+      try (Scope priceScope = priceSpan.makeCurrent()) {
+        price = extractPrice(doc, url);
+      } finally {
+        priceSpan.setAttribute("price", price != null ? price.toString() : "0");
+        priceSpan.end();
+      }
+
+      Span descSpan = tracer.spanBuilder("extractDescription").startSpan();
+      String description = null;
+      try (Scope descScope = descSpan.makeCurrent()) {
+        description = extractDescription(doc);
+      } finally {
+        descSpan.setAttribute("description.length", description != null ? description.length() : 0);
+        descSpan.end();
+      }
 
       Product product = new Product(url, title, price, description);
       product.setParsedAt(LocalDateTime.now());
 
       logger.debug("Извлечено - Title: {}, Price: {}, Description: {}", title, price, description);
 
+      span.setAttribute("product.title", title != null ? title : "");
+      span.setAttribute("product.price", price != null ? price.toString() : "0");
+      span.setAttribute("product.description.length", description != null ? description.length() : 0);
+
       return product;
 
     } catch (Exception e) {
       logger.error("Ошибка при парсинге HTML для URL {}: {}", url, e.getMessage());
+      span.recordException(e);
+      span.setStatus(io.opentelemetry.api.trace.StatusCode.ERROR, e.getMessage());
       throw new RuntimeException("Не удалось распарсить HTML: " + e.getMessage(), e);
+    } finally {
+      span.end();
     }
   }
 
